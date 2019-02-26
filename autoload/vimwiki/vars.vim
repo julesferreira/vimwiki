@@ -167,6 +167,7 @@ function! s:read_global_settings_from_user()
         \ 'listsyms': {'type': type(''), 'default': ' .oOX', 'min_length': 2},
         \ 'listsym_rejected': {'type': type(''), 'default': '-', 'length': 1},
         \ 'map_prefix': {'type': type(''), 'default': '<Leader>w'},
+        \ 'markdown_link_ext': {'type': type(0), 'default': 1, 'min': 0, 'max': 1},
         \ 'menu': {'type': type(''), 'default': 'Vimwiki'},
         \ 'table_auto_fmt': {'type': type(0), 'default': 1, 'min': 0, 'max': 1},
         \ 'table_mappings': {'type': type(0), 'default': 1, 'min': 0, 'max': 1},
@@ -687,9 +688,13 @@ function! s:populate_extra_markdown_vars()
   let mkd_syntax.rxWeblink1Prefix = '['
   let mkd_syntax.rxWeblink1Suffix = ')'
   let mkd_syntax.rxWeblink1Separator = ']('
+  let mkd_syntax.rxWeblink1Ext = ''
+  if vimwiki#vars#get_global('markdown_link_ext')
+    let mkd_syntax.rxWeblink1Ext = vimwiki#vars#get_wikilocal('ext')
+  endif
   " [DESCRIPTION](URL)
   let mkd_syntax.Weblink1Template = mkd_syntax.rxWeblink1Prefix . '__LinkDescription__'.
-        \ mkd_syntax.rxWeblink1Separator. '__LinkUrl__'.
+        \ mkd_syntax.rxWeblink1Separator. '__LinkUrl__'. mkd_syntax.rxWeblink1Ext .
         \ mkd_syntax.rxWeblink1Suffix
 
   let valid_chars = '[^\\]'
